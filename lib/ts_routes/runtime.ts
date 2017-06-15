@@ -5,7 +5,7 @@ type ScalarType = string | number | boolean;
 function $buildOptions(options: any, names: string[]): string {
   if (options) {
     let anchor = "";
-    let q = [];
+    const q = [];
     for (const key of Object.keys(options)) {
       if (names.indexOf(key) !== -1) {
         // the key is already consumed

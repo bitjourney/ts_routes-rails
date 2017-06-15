@@ -10,7 +10,9 @@
   "dependencies": {
     "typescript": "^2.4.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "tslint": "*"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

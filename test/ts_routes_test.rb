@@ -23,12 +23,14 @@ class TsRoutesTest < Minitest::Test
   def test_smoke
     source = TsRoutes::Generator.new(exclude: [/admin_/]).generate
 
-    File.write("#{dir}/routes.ts", source)
-
+    routes_ts = File.expand_path("build/routes.ts", __dir__)
     test_ts = File.expand_path("test.ts", __dir__)
     test_js = File.expand_path("test.js", __dir__)
 
+    File.write(routes_ts, source)
+
     assert system("node_modules/.bin/tsc", "--strict", test_ts)
     assert system("node", test_js)
+    assert system("node_modules/.bin/tslint", routes_ts)
   end
 end

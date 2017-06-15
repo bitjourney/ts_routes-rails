@@ -8,6 +8,8 @@ module TsRoutes
     FILTERED_DEFAULT_PARTS = [:controller, :action, :subdomain]
     URL_OPTIONS = [:protocol, :domain, :host, :port, :subdomain]
 
+    DEFAULT_FILE_HEADER = "/* tslint:disable:max-line-length variable-name whitespace */"
+
     # @return [Rails::Application]
     attr_reader :application
 
@@ -23,16 +25,22 @@ module TsRoutes
     # @return [Array<Regexp>,nil] default to nil
     attr_reader :exclude
 
+    # @return [String]
+    attr_reader :header
+
     def initialize(application: Rails.application,
                    camel_case: true,
                    route_suffix: 'path',
                    include: nil,
-                   exclude: nil)
+                   exclude: nil,
+                   header: DEFAULT_FILE_HEADER
+                   )
       @application = application
       @camel_case = camel_case
       @route_suffix = route_suffix
       @include = include
       @exclude = exclude
+      @header = header
     end
 
     # @return [ActionDispatch::Routing::RouteSet]
@@ -49,9 +57,9 @@ module TsRoutes
     def generate
       functions = named_routes.flat_map do |_name, route|
         build_routes_if_match(route)
-      end
+      end.compact
 
-      runtime_ts + "\n" + functions.join("\n")
+      header + "\n" + runtime_ts + "\n" + functions.join("\n")
     end
 
     # @param [ActionDispatch::Journey::Route] route
@@ -80,7 +88,6 @@ module TsRoutes
       end.join()
       path_expr = serialize(route, route.path.spec, parent_route)
       <<~TS
-
         /** #{parent_route&.path&.spec}#{route.path.spec} */
         export function #{route_name}(#{required_param_declarations}options?: object): string {
           return #{path_expr} + $buildOptions(options, #{route.path.names.to_json});
@@ -119,13 +126,13 @@ module TsRoutes
       when :GROUP
         name = find_symbol(spec.left).name
         name_expr = serialize(route, spec.left, parent_spec)
-        "((options && options.hasOwnProperty(#{name.to_json})) ? #{name_expr} : '')"
+        %{((options && options.hasOwnProperty(#{name.to_json})) ? #{name_expr} : "")}
       when :SYMBOL
         name = spec.name
-        route.required_parts.include?(name.to_sym) ? name : "(<any>options).#{name}"
+        route.required_parts.include?(name.to_sym) ? name : "(options as any).#{name}"
       when :STAR
         name = spec.left.left.sub(/^\*/, '')
-        "#{name}.map((part) => encodeURIComponent('' + part)).join('/')"
+        %{#{name}.map((part) => encodeURIComponent("" + part)).join("/")}
       when :LITERAL, :SLASH, :DOT
         serialize(route, spec.left, parent_spec)
       else

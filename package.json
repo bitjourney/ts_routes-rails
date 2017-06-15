@@ -1,0 +1,20 @@
+{
+  "name": "ts_routes",
+  "version": "1.0.0",
+  "description": "ts_routes-rails JavaScript runtime",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "dependencies": {
+    "typescript": "^2.4.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": "https://github.com/bitjourney/ts_routes-rails",
+  "author": "FUJI Goro",
+  "license": "MIT"
+}

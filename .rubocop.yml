@@ -1,0 +1,20 @@
+AllCops:
+  TargetRubyVersion: 2.3
+  DisplayCopNames: true
+  Exclude:
+    - tasks/**/*.*
+
+Style:
+  Enabled: false
+
+Layout:
+  Enabled: false
+
+Metrics:
+  Enabled: false
+
+Bundler:
+  Enabled: false
+
+Performance/RedundantBlockCall:
+  Enabled: false

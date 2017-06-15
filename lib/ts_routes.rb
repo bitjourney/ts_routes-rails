@@ -1,5 +1,5 @@
-require "ts_routes/version"
+require_relative "./ts_routes/version"
+require_relative "./ts_routes/generator"
 
 module TsRoutes
-  # Your code goes here...
 end

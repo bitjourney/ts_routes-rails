@@ -2,18 +2,17 @@
 
 type ScalarType = string | number | boolean;
 
-function $build_options(options: any): string {
+function $buildOptions(options: any, names: string[]): string {
   if (options) {
     let anchor = "";
     let q = [];
     for (const key of Object.keys(options)) {
-      if (key === "format") {
-        // just ignore it
-      }
-      else if (key === "anchor") {
-        anchor = "#" + encodeURIComponent(options[key]);
+      if (names.indexOf(key) !== -1) {
+        // the key is already consumed
+      } else if (key === "anchor") {
+        anchor = "#" + encodeURIComponent(options[ key ]);
       } else {
-        q.push(encodeURIComponent(key) + "=" + encodeURIComponent(options[key]));
+        q.push(encodeURIComponent(key) + "=" + encodeURIComponent(options[ key ]));
       }
     }
     return (q.length > 0 ? "?" + q.join("&") : "") + anchor;

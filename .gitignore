@@ -9,3 +9,4 @@
 /tmp/
 .idea/
 node_modules/
+*.js

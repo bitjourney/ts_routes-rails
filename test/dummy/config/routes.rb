@@ -1,5 +1,5 @@
 App.routes.draw do
-  get '/' => 'root#index'
+  get '/' => 'root#index', as: :root
 
   concern :likable do
     defaults format: :json do
@@ -16,7 +16,7 @@ App.routes.draw do
     end
   end
 
-  get '/photos(/:id)', to: 'photos#show'
+  get '/photos/*timestamp(/:id)', to: 'photos#show', as: :photos
 
   namespace :admin do
     resources :users

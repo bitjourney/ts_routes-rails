@@ -75,14 +75,15 @@ module TsRoutes
       name_parts = [route.name, parent_route&.name].compact
       route_name = build_route_name(*name_parts, route_suffix)
       required_param_declarations = route.required_parts.map do |name|
-        "#{name}: ScalarType, "
+        symbol = find_spec(route.path.spec, name)
+        "#{name}: #{symbol.left.start_with?('*') ? "ScalarType[]" : "ScalarType"}, "
       end.join()
       path_expr = serialize(route, route.path.spec, parent_route)
       <<~TS
 
         /** #{parent_route&.path&.spec}#{route.path.spec} */
         export function #{route_name}(#{required_param_declarations}options?: object): string {
-          return #{path_expr} + $build_options(options);
+          return #{path_expr} + $buildOptions(options, #{route.path.names.to_json});
         }
       TS
     end
@@ -116,16 +117,19 @@ module TsRoutes
       when :CAT
         "#{serialize(route, spec.left, parent_spec)} + #{serialize(route, spec.right)}"
       when :GROUP
-        name = find_symbol(spec.left).left.sub(/^:/, '')
+        name = find_symbol(spec.left).name
         name_expr = serialize(route, spec.left, parent_spec)
         "((options && options.hasOwnProperty(#{name.to_json})) ? #{name_expr} : '')"
       when :SYMBOL
-        name = spec.left.sub(/^:/, '')
+        name = spec.name
         route.required_parts.include?(name.to_sym) ? name : "(<any>options).#{name}"
+      when :STAR
+        name = spec.left.left.sub(/^\*/, '')
+        "#{name}.map((part) => encodeURIComponent('' + part)).join('/')"
       when :LITERAL, :SLASH, :DOT
         serialize(route, spec.left, parent_spec)
       else
-        "#{spec.type.to_s.downcase}(" +
+        "#{spec.type}(" +
             serialize(route, spec.left, parent_spec) +
             (spec.respond_to?(:right) ? ", #{serialize(route, spec.right)}" : "") +
             ")"
@@ -148,6 +152,14 @@ module TsRoutes
             return symbol_node
           end
         end
+      end
+    end
+
+    # @param [ActionDispatch::Journey::Nodes::Node] node
+    # @param [Symbol] name
+    def find_spec(node, name)
+      node.find do |n|
+        n.symbol? && n.name == name.to_s
       end
     end
 

@@ -1,3 +1,4 @@
+dist: trusty
 sudo: false
 language: ruby
 rvm:
@@ -7,6 +8,11 @@ rvm:
 language: node_js
 node_js:
   - "6"
+
+install:
+  - gem install bundler
+  - bundle check || bundle install
+  - npm install
 
 script:
   - bundle exec rake

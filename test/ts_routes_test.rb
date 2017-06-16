@@ -49,12 +49,15 @@ class TsRoutesTest < Minitest::Test
       t.root_path
       t.entries_path
       t.entries_path(page: 1, per: 20, anchor: 'foo')
+      t.entries_path(q: '')
+      t.entries_path(q: nil)
       t.entry_path(42, format: :json)
       t.entry_path(42, anchor: 'foo bar baz', from: 'twitter')
       t.entry_path(42, 'foo/bar': 'hoge=fuga')
       t.entry_path(42, foo: [1, 2, 3])
       t.edit_entry_path(42)
       t.photos_path(['2017', '06', '15'], { id: 42 })
+      t.photos_path(['2017', '06', '15'], { id: nil })
 
       t.entry_like_path(42)
 

@@ -137,7 +137,7 @@ module TsRoutes
       when :GROUP
         name = spec.left.find(&:symbol?).name
         name_expr = serialize(route, spec.left, parent_route)
-        %{((options && options.hasOwnProperty(#{name.to_json})) ? #{name_expr} : "")}
+        %{($hasPresentOwnProperty(options, #{name.to_json}) ? #{name_expr} : "")}
       when :SYMBOL
         name = spec.name
         route.required_parts.include?(name.to_sym) ? name : "(options as any).#{name}"

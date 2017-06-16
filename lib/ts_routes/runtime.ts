@@ -20,7 +20,7 @@ function $buildOptions(options: any, names: string[]): string {
         for (const v of value as ScalarType[]) {
           q.push(encodeURIComponent(key + "[]") + "=" + encodeURIComponent("" + v));
         }
-      } else {
+      } else if(value !== null && value !== undefined) {
         q.push(encodeURIComponent(key) + "=" + encodeURIComponent("" + value));
       }
     }
@@ -28,4 +28,12 @@ function $buildOptions(options: any, names: string[]): string {
   } else {
     return "";
   }
+}
+
+function $isPresent(value: any): boolean {
+  return value !== undefined && value !== null && ("" + value).length > 0;
+}
+
+function $hasPresentOwnProperty(options: any, key: string): boolean {
+  return options && options.hasOwnProperty(key) && $isPresent(options[key]);
 }

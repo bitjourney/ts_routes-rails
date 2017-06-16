@@ -1,4 +1,4 @@
-# TsRoutes for Rails [![Build Status](https://travis-ci.org/bitjourney/ts_routes-rails.svg?branch=master)](https://travis-ci.org/bitjourney/ts_routes-rails)
+# TsRoutes for Rails [![Gem Version](https://badge.fury.io/rb/ts_routes.svg)](https://badge.fury.io/rb/ts_routes) [![Build Status](https://travis-ci.org/bitjourney/ts_routes-rails.svg?branch=master)](https://travis-ci.org/bitjourney/ts_routes-rails)
 
 This gem generates Rails URL helpers in TypeScript, inspired by [js-routes](https://github.com/railsware/js-routes).
 

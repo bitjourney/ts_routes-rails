@@ -1,8 +1,40 @@
 # TsRoutes for Rails [![Build Status](https://travis-ci.org/bitjourney/ts_routes-rails.svg?branch=master)](https://travis-ci.org/bitjourney/ts_routes-rails)
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/ts_routes`. To experiment with that code, run `bin/console` for an interactive prompt.
+This gem generates Rails URL helpers in TypeScript, inspired by [js-routes](https://github.com/railsware/js-routes).
 
-TODO: Delete this and the text above, and describe your gem
+
+## SYNOPSIS
+
+In your `lib/tasks/ts_routes.rake`:
+
+```ruby:ts_routes.rake
+
+namespace :ts do
+  TS_ROUTES_FILENAME = "javascripts/generated/RailsRoutes.ts"
+
+  desc "Generate #{TS_ROUTES_FILENAME}"
+  task routes: :environment do
+    Rails.logger.info("Generating #{TS_ROUTES_FILENAME}")
+    source = TsRoutes.generate(
+        exclude: [/admin/, /debug/],
+    )
+    File.write(TS_ROUTES_FILENAME, source)
+  end
+end
+```
+
+Then, execute `rake ts:routes` to generate `RailsRoutes.ts` in your favorite path.
+
+And you can import it in TypeScript code:
+
+
+```foo.ts
+import * as Routes from './generated/RailsRoutes.ts';
+
+console.log(Routes.entriesPath({ page: 1, per: 20 })); // => /entries?page=1&per=20
+console.log(Routes.entryPath(1)); // => /entries/1
+```
+
 
 ## Installation
 
@@ -22,7 +54,13 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Generated URL helpers are almost compatible with Rails:
+
+* You must pass required parameters to the helpers as non-named (i.e. normal) arguments
+  * i.e. `Routes.entryPath(1)` for `/entries/:id`
+  * `Routes.entryPath({ id })` is refused
+* You must pass optional parameters as the last argument
+  * i.e. `Routes.entriesPath({ page: 1, per: 2 })`
 
 ## Development
 
@@ -32,7 +70,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/ts_routes.
+Bug reports and pull requests are welcome on GitHub at https://github.com/bitjourney/ts_routes-rails.
 
 ## License
 

@@ -10,9 +10,7 @@ node_js:
   - "6"
 
 install:
-  - gem install bundler
-  - bundle check || bundle install
-  - npm install
+  - bin/setup
 
 script:
   - bundle exec rake

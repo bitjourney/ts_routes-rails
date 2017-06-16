@@ -12,7 +12,7 @@ class TsRoutesTest < Minitest::Test
 
     def method_missing(helper, *args)
       actual = "Routes.#{helper.to_s.camelize(:lower)}(#{args.map(&:to_json).join(', ')})"
-      
+
       if (matched = /^dashboard_app_(.*)/.match(helper))
         expected = DashboardEngine.routes.url_helpers.__send__(matched[1], *args)
       else
@@ -36,7 +36,7 @@ class TsRoutesTest < Minitest::Test
   end
 
   def test_smoke
-    source = TsRoutes::Generator.new(exclude: [/admin_/]).generate
+    source = TsRoutes.generate(exclude: [/admin_/])
 
     routes_ts = File.expand_path("build/routes.ts", __dir__)
     File.write(routes_ts, source)

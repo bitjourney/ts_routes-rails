@@ -8,4 +8,4 @@ require "ts_routes"
 
 require "minitest/autorun"
 
-require_relative "./support/application"
+Dir["#{__dir__}/support/**/*.rb"].sort.each {|f| require f}

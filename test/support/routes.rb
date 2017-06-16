@@ -1,5 +1,17 @@
+
+class DashboardEngine < Rails::Engine
+end
+
+DashboardEngine.routes.draw do
+  root to: "dashboard#root"
+  resources :resources
+end
+
 App.routes.draw do
-  get '/' => 'root#index', as: :root
+
+  mount DashboardEngine => "/dashboard"
+
+  root to: 'root#index'
 
   concern :likable do
     defaults format: :json do

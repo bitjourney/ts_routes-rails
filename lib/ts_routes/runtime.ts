@@ -9,10 +9,19 @@ function $buildOptions(options: any, names: string[]): string {
     for (const key of Object.keys(options)) {
       if (names.indexOf(key) !== -1) {
         // the key is already consumed
-      } else if (key === "anchor") {
-        anchor = "#" + encodeURIComponent(options[ key ]);
+        continue;
+      }
+
+      const value: ScalarType = options[ key ];
+
+      if (key === "anchor") {
+        anchor = "#" + encodeURIComponent("" + value);
+      } else if (Array.isArray(value)) {
+        for (const v of value as ScalarType[]) {
+          q.push(encodeURIComponent(key + "[]") + "=" + encodeURIComponent("" + v));
+        }
       } else {
-        q.push(encodeURIComponent(key) + "=" + encodeURIComponent(options[ key ]));
+        q.push(encodeURIComponent(key) + "=" + encodeURIComponent("" + value));
       }
     }
     return (q.length > 0 ? "?" + q.join("&") : "") + anchor;

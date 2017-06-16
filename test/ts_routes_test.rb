@@ -12,8 +12,13 @@ class TsRoutesTest < Minitest::Test
 
     def method_missing(helper, *args)
       actual = "Routes.#{helper.to_s.camelize(:lower)}(#{args.map(&:to_json).join(', ')})"
-      expected = Rails.application.routes.url_helpers.__send__(helper, *args).to_json
-      @tests << [actual, expected]
+      
+      if (matched = /^dashboard_app_(.*)/.match(helper))
+        expected = DashboardEngine.routes.url_helpers.__send__(matched[1], *args)
+      else
+        expected = Rails.application.routes.url_helpers.__send__(helper, *args)
+      end
+      @tests << [actual, expected.to_json]
     end
 
     def render_to(filename)
@@ -41,12 +46,19 @@ class TsRoutesTest < Minitest::Test
 
     TsTestBuilder.new.tap do |t|
 
+      t.root_path
       t.entries_path
       t.entries_path(page: 1, per: 20, anchor: 'foo')
       t.entry_path(42, format: :json)
       t.entry_path(42, anchor: 'foo bar baz', from: 'twitter')
+      t.entry_path(42, 'foo/bar': 'hoge=fuga')
+      t.entry_path(42, foo: [1, 2, 3])
       t.edit_entry_path(42)
       t.photos_path(['2017', '06', '15'], { id: 42 })
+
+      t.entry_like_path(42)
+
+      t.dashboard_app_resource_path(42)
 
     end.render_to(test_ts)
 

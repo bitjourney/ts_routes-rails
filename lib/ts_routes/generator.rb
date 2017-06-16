@@ -56,20 +56,33 @@ module TsRoutes
     # @return [String] TypeScript source code that represents routes.ts
     def generate
       functions = named_routes.flat_map do |_name, route|
-        build_routes_if_match(route)
-      end.compact
+        build_routes_if_match(route) + mounted_app_routes(route)
+      end
 
       header + "\n" + runtime_ts + "\n" + functions.join("\n")
     end
 
     # @param [ActionDispatch::Journey::Route] route
-    # @param [ActionDispatch::Journey::Route] parent_route
-    # @return [Array<String>,nil]
-    def build_routes_if_match(route, parent_route = nil)
-      return if exclude && any_match?(route, parent_route, exclude)
-      return if include && !any_match?(route, parent_route, include)
+    def mounted_app_routes(route)
+      app = route.app.respond_to?(:app) && route.app.respond_to?(:constraints) ? route.app.app : route.app
 
-      build_routes(route, parent_route)
+      if app.respond_to?(:superclass) && app.superclass >= Rails::Engine && !route.path.anchored
+        app.routes.named_routes.flat_map do |_, engine_route|
+          build_routes_if_match(engine_route, route)
+        end
+      else
+        []
+      end
+    end
+
+    # @param [ActionDispatch::Journey::Route] route
+    # @param [ActionDispatch::Journey::Route] parent_route
+    # @return [Array<String>]
+    def build_routes_if_match(route, parent_route = nil)
+      return [] if exclude && any_match?(route, parent_route, exclude)
+      return [] if include && !any_match?(route, parent_route, include)
+
+      [build_route_function(route, parent_route)]
     end
 
     def any_match?(route, parent_route, matchers)
@@ -79,14 +92,16 @@ module TsRoutes
 
     # @param [ActionDispatch::Journey::Route] route
     # @param [ActionDispatch::Journey::Route] parent_route
-    def build_routes(route, parent_route = nil)
-      name_parts = [route.name, parent_route&.name].compact
+    def build_route_function(route, parent_route = nil)
+      name_parts = [parent_route&.name, route.name].compact
       route_name = build_route_name(*name_parts, route_suffix)
+
       required_param_declarations = route.required_parts.map do |name|
         symbol = find_spec(route.path.spec, name)
         "#{name}: #{symbol.left.start_with?('*') ? "ScalarType[]" : "ScalarType"}, "
       end.join()
       path_expr = serialize(route, route.path.spec, parent_route)
+
       <<~TS
         /** #{parent_route&.path&.spec}#{route.path.spec} */
         export function #{route_name}(#{required_param_declarations}options?: object): string {
@@ -101,31 +116,27 @@ module TsRoutes
       camel_case ? route_name.camelize(:lower) : route_name
     end
 
-    def build_route_params_type_name(*name_parts)
-      name_parts.join('_').camelize(:upper) + "ParamsType"
-    end
-
-    def serialize(route, spec, parent_spec = nil)
+    # @return [String]
+    def serialize(route, spec, parent_route)
       return nil unless spec
       return spec.tr(':', '').to_json if spec.is_a?(String)
-      result = serialize_spec(route, spec, parent_spec)
-      if parent_spec && result[1].is_a?(String)
-        result = [
-            Operator.new("CAT"),
-            serialize_spec(route, parent_spec),
-            result
-        ]
+
+      expr = serialize_spec(route, spec)
+      if parent_route
+        "#{serialize_spec(parent_route, parent_route.path.spec, nil)} + #{expr}"
+      else
+        expr
       end
-      result
     end
 
-    def serialize_spec(route, spec, parent_spec = nil)
+    # @return [String]
+    def serialize_spec(route, spec, parent_route = nil)
       case spec.type
       when :CAT
-        "#{serialize(route, spec.left, parent_spec)} + #{serialize(route, spec.right)}"
+        "#{serialize(route, spec.left, parent_route)} + #{serialize(route, spec.right, parent_route)}"
       when :GROUP
-        name = find_symbol(spec.left).name
-        name_expr = serialize(route, spec.left, parent_spec)
+        name = spec.left.find(&:symbol?).name
+        name_expr = serialize(route, spec.left, parent_route)
         %{((options && options.hasOwnProperty(#{name.to_json})) ? #{name_expr} : "")}
       when :SYMBOL
         name = spec.name
@@ -134,31 +145,9 @@ module TsRoutes
         name = spec.left.left.sub(/^\*/, '')
         %{#{name}.map((part) => encodeURIComponent("" + part)).join("/")}
       when :LITERAL, :SLASH, :DOT
-        serialize(route, spec.left, parent_spec)
+        serialize(route, spec.left, parent_route)
       else
-        "#{spec.type}(" +
-            serialize(route, spec.left, parent_spec) +
-            (spec.respond_to?(:right) ? ", #{serialize(route, spec.right)}" : "") +
-            ")"
-      end
-    end
-
-    # @param [ActionDispatch::Journey::Nodes::Node] node
-    # @return [ActionDispatch::Journey::Nodes::Symbol]
-    def find_symbol(node)
-      if node.respond_to?(:symbol?) && node.symbol?
-        node
-      else
-        if node.respond_to?(:left)
-          find_symbol(node.left)&.tap do |symbol_node|
-            return symbol_node
-          end
-        end
-        if node.respond_to?(:right)
-          find_symbol(node.right)&.tap do |symbol_node|
-            return symbol_node
-          end
-        end
+        raise "Node type #{spec.type} is not supported yet"
       end
     end
 

@@ -9,7 +9,7 @@ end
 
 App.routes.draw do
 
-  mount DashboardEngine => "/dashboard"
+  mount DashboardEngine => "/dashboard", as: :dashboard_app
 
   root to: 'root#index'
 

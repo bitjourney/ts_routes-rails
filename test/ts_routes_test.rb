@@ -1,19 +1,29 @@
 require "test_helper"
-require "shellwords"
 
 class TsRoutesTest < Minitest::Test
 
-  def dir
-    File.expand_path("build", __dir__)
+  class TsTestBuilder
+
+    attr_reader :tests
+
+    def initialize
+      @tests = []
+    end
+
+    def method_missing(helper, *args)
+      actual = "Routes.#{helper.to_s.camelize(:lower)}(#{args.map(&:to_json).join(', ')})"
+      expected = Rails.application.routes.url_helpers.__send__(helper, *args).to_json
+      @tests << [actual, expected]
+    end
+
+    def render_to(filename)
+      test_template =  ERB.new(File.read File.expand_path("test.ts.erb", __dir__))
+      File.write(filename, test_template.result(binding))
+    end
   end
 
-  def tsc(source)
-    ts_file = Tempfile.new(['routes', '.ts'])
-    ts_file.write(source)
-
-    output = `$(npm bin)/tsc --strict #{Shellwords.escape(ts_file.path)} 2>&1`
-    ts_file.delete
-    output
+  def npm_bin
+    @npm_bin ||= `npm bin`.strip
   end
 
   def test_version
@@ -24,13 +34,24 @@ class TsRoutesTest < Minitest::Test
     source = TsRoutes::Generator.new(exclude: [/admin_/]).generate
 
     routes_ts = File.expand_path("build/routes.ts", __dir__)
-    test_ts = File.expand_path("test.ts", __dir__)
-    test_js = File.expand_path("test.js", __dir__)
-
     File.write(routes_ts, source)
 
-    assert system("node_modules/.bin/tsc", "--strict", test_ts)
+    test_ts = File.expand_path("build/test.ts", __dir__)
+    test_js = File.expand_path("build/test.js", __dir__)
+
+    TsTestBuilder.new.tap do |t|
+
+      t.entries_path
+      t.entries_path(page: 1, per: 20, anchor: 'foo')
+      t.entry_path(42, format: :json)
+      t.entry_path(42, anchor: 'foo bar baz', from: 'twitter')
+      t.edit_entry_path(42)
+      t.photos_path(['2017', '06', '15'], { id: 42 })
+
+    end.render_to(test_ts)
+
+    assert system("#{npm_bin}/tsc", "--strict", test_ts)
     assert system("node", test_js)
-    assert system("node_modules/.bin/tslint", routes_ts)
+    assert system("#{npm_bin}/tslint", routes_ts)
   end
 end

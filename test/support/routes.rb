@@ -9,7 +9,7 @@ App.routes.draw do
     end
   end
 
-  resources :entries, only: %i(index new destroy) do
+  resources :entries do
     concerns :likable
     resources :revisions, only: :show, controller: 'entries/revisions' do
       get :latest, on: :collection

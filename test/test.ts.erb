@@ -1,0 +1,23 @@
+// ERB template files for TS testing
+import * as Routes from "./routes";
+
+let i = 0;
+let notOk = 0;
+
+function assertEqual(actual: string, expected: string) {
+  if (actual === expected) {
+    console.log("ok - %d # %s", ++i, actual);
+  } else {
+    console.log("not ok - %d # actual: %s, expected: %s", ++i, actual, expected);
+    notOk++;
+  }
+}
+
+console.log("# testing Routes in TypeScript");
+
+<% tests.each do |actual, expected| %>
+assertEqual(<%= actual %>, <%= expected %>);
+<% end %>
+
+console.assert(notOk === 0, "all tests passes");
+console.log("1..%d", i);

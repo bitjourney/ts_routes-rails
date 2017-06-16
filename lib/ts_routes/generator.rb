@@ -66,7 +66,7 @@ module TsRoutes
     def mounted_app_routes(route)
       app = route.app.respond_to?(:app) && route.app.respond_to?(:constraints) ? route.app.app : route.app
 
-      if app.respond_to?(:superclass) && app.superclass >= Rails::Engine && !route.path.anchored
+      if app.respond_to?(:superclass) && app.superclass <= Rails::Engine && !route.path.anchored
         app.routes.named_routes.flat_map do |_, engine_route|
           build_routes_if_match(engine_route, route)
         end

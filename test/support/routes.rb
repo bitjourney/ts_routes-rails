@@ -1,5 +1,10 @@
-
 class DashboardEngine < Rails::Engine
+end
+
+class HelloWorldEngine
+  def self.call(_env)
+    [200, {}, ["Hello, World!"]]
+  end
 end
 
 DashboardEngine.routes.draw do
@@ -8,6 +13,8 @@ DashboardEngine.routes.draw do
 end
 
 App.routes.draw do
+
+  mount HelloWorldEngine => :hello, as: :hello
 
   mount DashboardEngine => "/dashboard", as: :dashboard_app
 

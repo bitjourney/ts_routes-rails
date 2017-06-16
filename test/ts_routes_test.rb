@@ -59,6 +59,7 @@ class TsRoutesTest < Minitest::Test
       t.entry_like_path(42)
 
       t.dashboard_app_resource_path(42)
+      t.hello_path
 
     end.render_to(test_ts)
 

@@ -3,7 +3,7 @@
 This gem generates Rails URL helpers in TypeScript, inspired by [js-routes](https://github.com/railsware/js-routes).
 
 
-## SYNOPSIS
+## Usage
 
 In your `lib/tasks/ts_routes.rake`:
 
@@ -35,6 +35,13 @@ console.log(Routes.entriesPath({ page: 1, per: 20 })); // => /entries?page=1&per
 console.log(Routes.entryPath(1)); // => /entries/1
 ```
 
+Generated URL helpers are almost compatible with Rails, but they are more strict:
+
+* You must pass required parameters to the helpers as non-named (i.e. normal) arguments
+  * i.e. `Routes.entryPath(1)` for `/entries/:id`
+  * `Routes.entryPath({ id })` is refused
+* You must pass optional parameters as the last argument
+  * i.e. `Routes.entriesPath({ page: 1, per: 2 })`
 
 ## Installation
 
@@ -51,16 +58,6 @@ And then execute:
 Or install it yourself as:
 
     $ gem install ts_routes
-
-## Usage
-
-Generated URL helpers are almost compatible with Rails:
-
-* You must pass required parameters to the helpers as non-named (i.e. normal) arguments
-  * i.e. `Routes.entryPath(1)` for `/entries/:id`
-  * `Routes.entryPath({ id })` is refused
-* You must pass optional parameters as the last argument
-  * i.e. `Routes.entriesPath({ page: 1, per: 2 })`
 
 ## Development
 

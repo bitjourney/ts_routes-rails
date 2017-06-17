@@ -10,8 +10,8 @@ module TsRoutes
 
     DEFAULT_FILE_HEADER = "/* tslint:disable:max-line-length variable-name whitespace */"
 
-    # @return [Rails::Application]
-    attr_reader :application
+    # @return [ActionDispatch::Routing::RouteSet]
+    attr_reader :routes
 
     # @return [Boolean] default to true
     attr_reader :camel_case
@@ -28,24 +28,19 @@ module TsRoutes
     # @return [String]
     attr_reader :header
 
-    def initialize(application: Rails.application,
+    def initialize(routes: Rails.application.routes,
                    camel_case: true,
                    route_suffix: 'path',
                    include: nil,
                    exclude: nil,
                    header: DEFAULT_FILE_HEADER
                    )
-      @application = application
+      @routes = routes
       @camel_case = camel_case
       @route_suffix = route_suffix
       @include = include
       @exclude = exclude
       @header = header
-    end
-
-    # @return [ActionDispatch::Routing::RouteSet]
-    def routes
-      application.routes
     end
 
     # @return [ActionDispatch::Routing::RouteSet::NamedRouteCollection]

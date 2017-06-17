@@ -17,7 +17,7 @@ function $buildOptions(options: any, names: string[]): string {
       if (key === "anchor") {
         anchor = "#" + encodeURIComponent("" + value);
       } else if (Array.isArray(value)) {
-        for (const v of value as ScalarType[]) {
+        for (const v of value) {
           q.push(encodeURIComponent(key + "[]") + "=" + encodeURIComponent("" + v));
         }
       } else if(value !== null && value !== undefined) {

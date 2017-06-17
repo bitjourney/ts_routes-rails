@@ -41,6 +41,11 @@ class TsRoutesTest < Minitest::Test
     routes_ts = File.expand_path("build/routes.ts", __dir__)
     File.write(routes_ts, source)
 
+    tsconfig = File.expand_path("build/tsconfig.json", __dir__)
+    FileUtils.copy_file(
+      File.expand_path("support/tsconfig.json", __dir__),
+      tsconfig)
+
     test_ts = File.expand_path("build/test.ts", __dir__)
     test_js = File.expand_path("build/test.js", __dir__)
 
@@ -66,8 +71,8 @@ class TsRoutesTest < Minitest::Test
 
     end.render_to(test_ts)
 
-    assert system("#{npm_bin}/tsc", "--strict", test_ts)
+    assert system("#{npm_bin}/tsc", "--project", tsconfig)
     assert system("node", test_js)
-    assert system("#{npm_bin}/tslint", routes_ts)
+    assert system("#{npm_bin}/tslint", "--type-check", "--project", tsconfig)
   end
 end

@@ -2,7 +2,8 @@ AllCops:
   TargetRubyVersion: 2.3
   DisplayCopNames: true
   Exclude:
-    - tasks/**/*.*
+    - "vendor/**/*"
+    - "node_modules/**/*"
 
 Style:
   Enabled: false

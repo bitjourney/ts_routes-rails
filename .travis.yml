@@ -5,9 +5,14 @@ rvm:
   - "2.3"
   - "2.4"
 
-install:
-  - nvm install 6
-  - bin/setup
+before_install:
+  - nvm install 8
+  - npm install
+
+cache:
+  bundler: true
+  directories:
+    - node_modules
 
 script:
   - bundle exec rake

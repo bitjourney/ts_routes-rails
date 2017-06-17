@@ -12,7 +12,7 @@ function $buildOptions(options: any, names: string[]): string {
         continue;
       }
 
-      const value: ScalarType = options[ key ];
+      const value = options[ key ];
 
       if (key === "anchor") {
         anchor = "#" + encodeURIComponent("" + value);

@@ -1,6 +1,9 @@
 {
   "extends": [
-    "tslint:recommended"
+    "tslint:latest"
   ],
-  "defaultSeverity": "error"
+  "defaultSeverity": "error",
+  "rules": {
+    "strict-type-predicates": true
+  }
 }

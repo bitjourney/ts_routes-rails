@@ -10,7 +10,7 @@ In your `lib/tasks/ts_routes.rake`:
 ```ruby:ts_routes.rake
 
 namespace :ts do
-  TS_ROUTES_FILENAME = "javascripts/generated/RailsRoutes.ts"
+  TS_ROUTES_FILENAME = "javascripts/generated/routes.ts"
 
   desc "Generate #{TS_ROUTES_FILENAME}"
   task routes: :environment do
@@ -23,7 +23,7 @@ namespace :ts do
 end
 ```
 
-Then, execute `rake ts:routes` to generate `RailsRoutes.ts` in your favorite path.
+Then, execute `rake ts:routes` to generate `routes.ts` in your favorite path.
 
 And you can import it in TypeScript code:
 

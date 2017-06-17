@@ -31,6 +31,10 @@ class TsRoutesTest < Minitest::Test
     @npm_bin ||= `npm bin`.strip
   end
 
+  def relative_path(path)
+    File.expand_path(path, __dir__)
+  end
+
   def test_version
     refute_nil ::TsRoutes::VERSION
   end
@@ -38,16 +42,14 @@ class TsRoutesTest < Minitest::Test
   def test_smoke
     source = TsRoutes.generate(exclude: [/admin_/])
 
-    routes_ts = File.expand_path("build/routes.ts", __dir__)
+    routes_ts = relative_path("build/routes.ts")
     File.write(routes_ts, source)
 
-    tsconfig = File.expand_path("build/tsconfig.json", __dir__)
-    FileUtils.copy_file(
-      File.expand_path("support/tsconfig.json", __dir__),
-      tsconfig)
+    tsconfig = relative_path("build/tsconfig.json")
+    FileUtils.copy_file(relative_path("support/tsconfig.json"), tsconfig)
 
-    test_ts = File.expand_path("build/test.ts", __dir__)
-    test_js = File.expand_path("build/test.js", __dir__)
+    test_ts = relative_path("build/test.ts")
+    test_js = relative_path("build/test.js")
 
     TsTestBuilder.new.tap do |t|
 

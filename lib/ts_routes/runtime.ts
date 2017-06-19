@@ -15,13 +15,19 @@ function $buildOptions(options: any, names: string[]): string {
       const value = options[ key ];
 
       if (key === "anchor") {
-        anchor = "#" + encodeURIComponent("" + value);
+        anchor = `#${$encode(value)}`;
+      } else if ($isScalarType(value)) {
+        q.push(`${$encode(key)}=${$encode(value)}`);
       } else if (Array.isArray(value)) {
         for (const v of value) {
-          q.push(encodeURIComponent(key + "[]") + "=" + encodeURIComponent("" + v));
+          const k = `${key}[]`;
+          q.push(`${$encode(k)}=${$encode(v)}`);
         }
-      } else if(value !== null && value !== undefined) {
-        q.push(encodeURIComponent(key) + "=" + encodeURIComponent("" + value));
+      } else if($isNotNull(value)) { // i.e. non-null, non-scalar, non-array type
+        for (const k of Object.keys(value)) {
+          const hk = `${key}[${k}]`;
+          q.push(`${$encode(hk)}=${$encode(value[k])}`);
+        }
       }
     }
     return (q.length > 0 ? "?" + q.join("&") : "") + anchor;
@@ -30,8 +36,20 @@ function $buildOptions(options: any, names: string[]): string {
   }
 }
 
+function $encode(value: any): string {
+  return encodeURIComponent(value);
+}
+
+function $isNotNull(value: any): boolean {
+  return value !== undefined && value !== null;
+}
+
+function $isScalarType(value: any): value is ScalarType {
+  return typeof(value) === "string" || typeof(value) === "number" || typeof(value) === "boolean";
+}
+
 function $isPresent(value: any): boolean {
-  return value !== undefined && value !== null && ("" + value).length > 0;
+  return $isNotNull(value) && ("" + value).length > 0;
 }
 
 function $hasPresentOwnProperty(options: any, key: string): boolean {

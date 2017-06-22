@@ -4,6 +4,10 @@
   ],
   "defaultSeverity": "error",
   "rules": {
-    "strict-type-predicates": true
+    "strict-type-predicates": true,
+    "cyclomatic-complexity": [
+      true,
+      10
+    ]
   }
 }

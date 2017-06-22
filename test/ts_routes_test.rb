@@ -62,7 +62,9 @@ class TsRoutesTest < Minitest::Test
       t.entry_path(42, anchor: 'foo bar baz', from: 'twitter')
       t.entry_path(42, 'foo/bar': 'hoge=fuga')
       t.entry_path(42, foo: [1, 2, 3])
+      t.entry_path(42, foo: [[1, 2, 3], [10, 20, 30]])
       t.entry_path(42, foo: { bar: true, baz: false })
+      t.entry_path(42, foo: { bar: { x: true }, baz: [1, 2,3] })
 
       t.edit_entry_path(42)
       t.photos_path(['2017', '06', '15'], { id: 42 })

@@ -1,5 +1,9 @@
 {
     "compilerOptions": {
-        "strict": true
+        "strict": true,
+        "noUnusedParameters": true,
+        "noUnusedLocals": true,
+        "noImplicitReturns": true,
+        "noFallthroughCasesInSwitch": true
     }
 }

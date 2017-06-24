@@ -29,7 +29,7 @@ And you can import it in TypeScript code:
 
 
 ```foo.ts
-import * as Routes from './generated/RailsRoutes.ts';
+import * as Routes from './generated/routes';
 
 console.log(Routes.entriesPath({ page: 1, per: 20 })); // => /entries?page=1&per=20
 console.log(Routes.entryPath(1)); // => /entries/1
@@ -39,7 +39,9 @@ Generated URL helpers are almost compatible with Rails, but they are more strict
 
 * You must pass required parameters to the helpers as non-named (i.e. normal) arguments
   * i.e. `Routes.entryPath(1)` for `/entries/:id`
-  * `Routes.entryPath({ id })` is refused
+  * `Routes.entryPath({ id })` is not allowed
+* Required parameters must not be `null` nor `undefined`
+  * i.e. `Routes.entyPath(null)` does not compile
 * You must pass optional parameters as the last argument
   * i.e. `Routes.entriesPath({ page: 1, per: 2 })`
 

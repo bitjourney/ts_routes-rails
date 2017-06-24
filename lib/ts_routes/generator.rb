@@ -144,7 +144,7 @@ module TsRoutes
         route.required_parts.include?(name.to_sym) ? name : "(options as any).#{name}"
       when :STAR
         name = spec.left.left.sub(/^\*/, '')
-        %{#{name}.map((part) => encodeURIComponent("" + part)).join("/")}
+        %{#{name}.map((part) => $encode(part)).join("/")}
       when :LITERAL, :SLASH, :DOT
         serialize(route, spec.left, parent_route)
       else

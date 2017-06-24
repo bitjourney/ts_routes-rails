@@ -70,6 +70,8 @@ class TsRoutesTest < Minitest::Test
       t.photos_path(['2017', '06', '15'], { id: 42 })
       t.photos_path(['2017', '06', '15'], { id: nil })
 
+      t.settings_path
+
       t.entry_like_path(42)
 
       t.dashboard_app_resource_path(42)

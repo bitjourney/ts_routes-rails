@@ -124,15 +124,21 @@ module TsRoutes
       end
     end
 
+    # @param [ActionDispatch::Journey::Route] route
+    # @param [ActionDispatch::Journey::Nodes::Node] spec
+    # @param [ActionDispatch::Journey::Route] parent_route
     # @return [String]
     def serialize_spec(route, spec, parent_route = nil)
       case spec.type
       when :CAT
         "#{serialize(route, spec.left, parent_route)} + #{serialize(route, spec.right, parent_route)}"
-      when :GROUP
-        name = spec.left.find(&:symbol?).name
-        name_expr = serialize(route, spec.left, parent_route)
-        %{($hasPresentOwnProperty(options, #{name.to_json}) ? #{name_expr} : "")}
+      when :GROUP # to declare optional parts
+        if (symbol = spec.left.find(&:symbol?))
+          name_expr = serialize(route, spec.left, parent_route)
+          %{($hasPresentOwnProperty(options, #{symbol.name.to_json}) ? #{name_expr} : "")}
+        else
+          serialize(route, spec.left, parent_route)
+        end
       when :SYMBOL
         name = spec.name
         route.required_parts.include?(name.to_sym) ? name : "(options as any).#{name}"

@@ -37,6 +37,8 @@ App.routes.draw do
 
   get '/photos/*timestamp(/:id)', to: 'photos#show', as: :photos
 
+  get '/settings(/account)', to: 'settings#foo', as: :settings
+
   namespace :admin do
     resources :users
   end

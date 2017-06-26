@@ -1,8 +1,8 @@
 {
   "name": "ts_routes",
   "version": "1.0.0",
-  "description": "ts_routes-rails JavaScript runtime",
-  "main": "index.js",
+  "description": "ts_routes-rails JavaScript runtime (not a standalone package)",
+  "private": true,
   "directories": {
     "lib": "lib",
     "test": "test"
@@ -11,10 +11,12 @@
     "typescript": "^2.4.0"
   },
   "devDependencies": {
+    "prettier": "*",
     "tslint": "*"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "format": "prettier --write 'lib/**/*.ts' 'test/**/*.ts'",
+    "test": "rake test"
   },
   "repository": "https://github.com/bitjourney/ts_routes-rails",
   "author": "FUJI Goro",

@@ -12,7 +12,7 @@ function $buildOptions(options: any, names: string[]): string {
         continue;
       }
 
-      const value = options[ key ];
+      const value = options[key];
 
       if (key === "anchor") {
         anchor = `#${$encode(value)}`;
@@ -33,9 +33,10 @@ function $buildQuery(q: string[], key: string, value: any) {
     for (const v of value) {
       $buildQuery(q, `${key}[]`, v);
     }
-  } else if ($isNotNull(value)) { // i.e. non-null, non-scalar, non-array type
+  } else if ($isNotNull(value)) {
+    // i.e. non-null, non-scalar, non-array type
     for (const k of Object.keys(value)) {
-      $buildQuery(q, `${key}[${k}]`, value[ k ]);
+      $buildQuery(q, `${key}[${k}]`, value[k]);
     }
   }
 }
@@ -49,7 +50,11 @@ function $isNotNull(value: any): boolean {
 }
 
 function $isScalarType(value: any): value is ScalarType {
-  return typeof(value) === "string" || typeof(value) === "number" || typeof(value) === "boolean";
+  return (
+    typeof value === "string" ||
+    typeof value === "number" ||
+    typeof value === "boolean"
+  );
 }
 
 function $isPresent(value: any): boolean {
@@ -57,5 +62,5 @@ function $isPresent(value: any): boolean {
 }
 
 function $hasPresentOwnProperty(options: any, key: string): boolean {
-  return options && options.hasOwnProperty(key) && $isPresent(options[ key ]);
+  return options && options.hasOwnProperty(key) && $isPresent(options[key]);
 }

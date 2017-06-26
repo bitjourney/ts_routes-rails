@@ -8,7 +8,7 @@ module TsRoutes
     FILTERED_DEFAULT_PARTS = [:controller, :action, :subdomain]
     URL_OPTIONS = [:protocol, :domain, :host, :port, :subdomain]
 
-    DEFAULT_FILE_HEADER = "/* tslint:disable:max-line-length variable-name whitespace */"
+    DEFAULT_FILE_HEADER = "/* tslint:disable */"
 
     # @return [ActionDispatch::Routing::RouteSet]
     attr_reader :routes

@@ -40,7 +40,10 @@ class TsRoutesTest < Minitest::Test
   end
 
   def test_smoke
-    source = TsRoutes.generate(exclude: [/admin_/])
+    source = TsRoutes.generate(
+      exclude: [/admin_/],
+      header: "/* tslint:disable:max-line-length variable-name whitespace */"
+    )
 
     routes_ts = relative_path("build/routes.ts")
     File.write(routes_ts, source)

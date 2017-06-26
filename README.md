@@ -1,14 +1,14 @@
 # TsRoutes for Rails [![Gem Version](https://badge.fury.io/rb/ts_routes.svg)](https://badge.fury.io/rb/ts_routes) [![Build Status](https://travis-ci.org/bitjourney/ts_routes-rails.svg?branch=master)](https://travis-ci.org/bitjourney/ts_routes-rails)
 
-This gem generates Rails URL helpers in TypeScript, inspired by [js-routes](https://github.com/railsware/js-routes).
+This gem generates Rails URL helpers in TypeScript, which is synchronized to `routes.rb`.
 
+THis is inspired by [js-routes](https://github.com/railsware/js-routes), which invents the great idea to export URL helpers to JavaScript.
 
 ## Usage
 
 In your `lib/tasks/ts_routes.rake`:
 
 ```ruby:ts_routes.rake
-
 namespace :ts do
   TS_ROUTES_FILENAME = "javascripts/generated/routes.ts"
 
@@ -27,7 +27,6 @@ Then, execute `rake ts:routes` to generate `routes.ts` in your favorite path.
 
 And you can import it in TypeScript code:
 
-
 ```foo.ts
 import * as Routes from './generated/routes';
 
@@ -44,6 +43,16 @@ Generated URL helpers are almost compatible with Rails, but they are more strict
   * i.e. `Routes.entyPath(null)` does not compile
 * You must pass optional parameters as the last argument
   * i.e. `Routes.entriesPath({ page: 1, per: 2 })`
+
+### How to Update routes.ts Automatically
+
+Use [gaurd](https://github.com/guard/guard):
+
+```ruby:Guardfile
+guard :rake, task: 'js:routes' do
+  watch(%r{config/routes\.rb$})
+end
+```
 
 ## Installation
 

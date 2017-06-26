@@ -4,18 +4,16 @@ AllCops:
   Exclude:
     - "vendor/**/*"
     - "node_modules/**/*"
+  DisabledByDefault: true
 
-Style:
-  Enabled: false
-
-Layout:
-  Enabled: false
-
-Metrics:
-  Enabled: false
-
-Bundler:
-  Enabled: false
+Performance:
+  Enabled: true
 
 Performance/RedundantBlockCall:
   Enabled: false
+
+Style/FrozenStringLiteralComment:
+  Enabled: true
+
+Style/EmptyLineAfterMagicComment:
+  Enabled: true

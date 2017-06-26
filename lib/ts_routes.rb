@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative "./ts_routes/version"
 require_relative "./ts_routes/generator"
 

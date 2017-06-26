@@ -8,7 +8,7 @@ THis is inspired by [js-routes](https://github.com/railsware/js-routes), which i
 
 In your `lib/tasks/ts_routes.rake`:
 
-```ruby:ts_routes.rake
+```ruby
 namespace :ts do
   TS_ROUTES_FILENAME = "javascripts/generated/routes.ts"
 
@@ -27,7 +27,7 @@ Then, execute `rake ts:routes` to generate `routes.ts` in your favorite path.
 
 And you can import it in TypeScript code:
 
-```foo.ts
+```typescript
 import * as Routes from './generated/routes';
 
 console.log(Routes.entriesPath({ page: 1, per: 20 })); // => /entries?page=1&per=20
@@ -48,8 +48,11 @@ Generated URL helpers are almost compatible with Rails, but they are more strict
 
 Use [gaurd](https://github.com/guard/guard):
 
-```ruby:Guardfile
-guard :rake, task: 'js:routes' do
+```ruby
+# In Guardfile
+
+# Run `rake ts:routes` when routes.rb is updated.
+guard :rake, task: 'ts:routes' do
   watch(%r{config/routes\.rb$})
 end
 ```
@@ -64,11 +67,15 @@ gem 'ts_routes'
 
 And then execute:
 
-    $ bundle
+```console
+$ bundle
+```
 
 Or install it yourself as:
 
-    $ gem install ts_routes
+```console
+$ gem install ts_routes
+```
 
 ## Development
 

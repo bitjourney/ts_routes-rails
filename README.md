@@ -2,7 +2,7 @@
 
 This gem generates Rails URL helpers in TypeScript, which is synchronized to `routes.rb`.
 
-THis is inspired by [js-routes](https://github.com/railsware/js-routes), which invents the great idea to export URL helpers to JavaScript.
+This is inspired by [js-routes](https://github.com/railsware/js-routes), which invents the great idea to export URL helpers to JavaScript.
 
 ## Usage
 
@@ -46,7 +46,7 @@ Generated URL helpers are almost compatible with Rails, but they are more strict
 
 ### How to Update routes.ts Automatically
 
-Use [gaurd](https://github.com/guard/guard):
+Use [guard](https://github.com/guard/guard):
 
 ```ruby
 # In Guardfile

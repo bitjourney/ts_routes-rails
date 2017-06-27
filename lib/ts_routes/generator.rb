@@ -88,8 +88,7 @@ module TsRoutes
     # @param [ActionDispatch::Journey::Route] route
     # @param [ActionDispatch::Journey::Route] parent_route
     def build_route_function(route, parent_route = nil)
-      name_parts = [parent_route&.name, route.name].compact
-      route_name = build_route_name(*name_parts, route_suffix)
+      route_name = build_route_name(parent_route&.name, route.name, route_suffix)
 
       required_param_declarations = route.required_parts.map do |name|
         symbol = find_spec(route.path.spec, name)

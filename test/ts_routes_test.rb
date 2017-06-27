@@ -88,4 +88,21 @@ class TsRoutesTest < Minitest::Test
     assert system("node", test_js)
     assert system("#{npm_bin}/tslint", "--type-check", "--project", tsconfig)
   end
+
+  def test_build_name_non_camel_case
+    generator = TsRoutes::Generator.new(
+      camel_case: false,
+    )
+
+    assert_equal(generator.build_route_name('foo', nil, 'bar'), 'foo_bar')
+  end
+
+  def test_build_name_amel_case
+    generator = TsRoutes::Generator.new(
+      camel_case: true,
+    )
+
+    assert_equal(generator.build_route_name('foo', nil, 'bar'), 'fooBar')
+  end
+
 end

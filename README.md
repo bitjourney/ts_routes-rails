@@ -58,10 +58,11 @@ Here are options for `TsRoutes.generate`:
 <tr><td>header</td><td>additional parts of generated files</td><td>"/* tslint:disable */"</td></tr>
 </table>
 
+Note that `TsRoutes.generate(options)` is a shortcut of `TsRoutes::Generator.new(options).generate`.
 
-### How to Update routes.ts Automatically
+### How to Keep routes.ts Up-To-Date
 
-Use [guard](https://github.com/guard/guard):
+Use [Guard](https://github.com/guard/guard):
 
 ```ruby
 # In Guardfile

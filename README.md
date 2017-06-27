@@ -44,6 +44,21 @@ Generated URL helpers are almost compatible with Rails, but they are more strict
 * You must pass optional parameters as the last argument
   * i.e. `Routes.entriesPath({ page: 1, per: 2 })`
 
+### Options
+
+Here are options for `TsRoutes.generate`:
+
+<table>
+<tr><th>name</th><th>description</th><th>default</th></tr>
+<tr><td>routes</td><td>Rails routes to export</td><td>Rails.application.routes</td></tr>
+<tr><td>camel_case</td><td>naming style; don't change if false</td><td>true</td></tr>
+<tr><td>route_suffix</td><td>suffix for each route</td><td>"path"</td></tr>
+<tr><td>include</td><td>Array of Regexp patterns to include</td><td>nil</td></tr>
+<tr><td>exclude</td><td>Array of Regexp patterns to exclude</td><td>nil</td></tr>
+<tr><td>header</td><td>additional parts of generated files</td><td>"/* tslint:disable */"</td></tr>
+</table>
+
+
 ### How to Update routes.ts Automatically
 
 Use [guard](https://github.com/guard/guard):

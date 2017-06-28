@@ -33,7 +33,7 @@ function $buildQuery(q: string[], key: string, value: any) {
     for (const v of value) {
       $buildQuery(q, `${key}[]`, v);
     }
-  } else if ($isNotNull(value)) {
+  } else if (value != null) {
     // i.e. non-null, non-scalar, non-array type
     for (const k of Object.keys(value)) {
       $buildQuery(q, `${key}[${k}]`, value[k]);
@@ -45,10 +45,6 @@ function $encode(value: any): string {
   return encodeURIComponent(value);
 }
 
-function $isNotNull(value: any): boolean {
-  return value !== undefined && value !== null;
-}
-
 function $isScalarType(value: any): value is ScalarType {
   return (
     typeof value === "string" ||
@@ -58,7 +54,7 @@ function $isScalarType(value: any): value is ScalarType {
 }
 
 function $isPresent(value: any): boolean {
-  return $isNotNull(value) && ("" + value).length > 0;
+  return value != null && ("" + value).length > 0;
 }
 
 function $hasPresentOwnProperty(options: any, key: string): boolean {

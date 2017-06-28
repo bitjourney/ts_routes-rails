@@ -8,6 +8,10 @@
     "cyclomatic-complexity": [
       true,
       10
+    ],
+    "triple-equals": [
+      true,
+      "allow-null-check"
     ]
   }
 }

@@ -9,11 +9,14 @@ AllCops:
 Performance:
   Enabled: true
 
+Lint:
+  Enabled: true
+
 Performance/RedundantBlockCall:
   Enabled: false
 
 Style/FrozenStringLiteralComment:
   Enabled: true
 
-Style/EmptyLineAfterMagicComment:
+Layout/EmptyLineAfterMagicComment:
   Enabled: true

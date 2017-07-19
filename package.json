@@ -8,11 +8,11 @@
     "test": "test"
   },
   "dependencies": {
-    "typescript": "^2.4.0"
+    "typescript": "^2.4.1"
   },
   "devDependencies": {
-    "prettier": "*",
-    "tslint": "*"
+    "prettier": "^1.5.3",
+    "tslint": "^5.5.0"
   },
   "scripts": {
     "format": "prettier --write 'lib/**/*.ts' 'test/**/*.ts'",

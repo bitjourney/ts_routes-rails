@@ -12,12 +12,12 @@ Gem::Specification.new do
   spec.name          = "ts_routes"
   spec.version       = TsRoutes::VERSION
   spec.authors       = ["FUJI Goro (gfx)"]
-  spec.email         = ["gfuji@cpan.org"]
+  spec.email         = ["goro-fuji@bitjourney.com"]
 
   spec.summary       = %q{Rails routing helpers for TypeScript}
   spec.description   = %q{Rails routing helpers for TypeScript, inspired by js-routes (https://github.com/railsware/js-routes)}
   spec.homepage      = "https://github.com/bitjourney/ts_routes-rails"
-  spec.license       = "MIT"
+  spec.license       = "Apache-2.0"
 
   spec.files         = `git ls-files -z`.split("\x0").reject do |f|
     f.match(%r{^(test|spec|features)/})

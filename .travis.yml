@@ -4,6 +4,11 @@ language: ruby
 rvm:
   - "2.3"
   - "2.4"
+  - ruby-head
+
+matrix:
+  allow_failures:
+    - rvm: ruby-head
 
 before_install:
   - nvm install 8

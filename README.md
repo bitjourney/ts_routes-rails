@@ -32,9 +32,12 @@ import * as Routes from './generated/routes';
 
 console.log(Routes.entriesPath({ page: 1, per: 20 })); // => /entries?page=1&per=20
 console.log(Routes.entryPath(1)); // => /entries/1
+
+// "anchor" is a special keyword to add anchors (as Rails's does)
+console.log(Routes.entryPath(1, { anchor: 'foo' })); // => /entries/1#foo
 ```
 
-Generated URL helpers are almost compatible with Rails, but they are more strict:
+Generated URL helpers are almost compatible with Rails, but they have some restriction:
 
 * You must pass required parameters to the helpers as non-named (i.e. normal) arguments
   * i.e. `Routes.entryPath(1)` for `/entries/:id`

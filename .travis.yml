@@ -12,14 +12,15 @@ matrix:
 
 install:
   - nvm install 8
-  - npm install
-  - gem update --system
+  - npm install -g npm && npm --version
+  - npm ci
+  - gem update --system && gem --version
   - bundle install --jobs=3 --retry=3 --path=${BUNDLE_PATH:-vendor/bundle}
 
 cache:
   bundler: true
   directories:
-    - node_modules
+    - "$HOME/.npm"
     - vendor/bundle
 
 script:

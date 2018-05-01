@@ -86,7 +86,7 @@ class TsRoutesTest < Minitest::Test
 
     assert system("#{npm_bin}/tsc", "--project", tsconfig)
     assert system("node", test_js)
-    assert system("#{npm_bin}/tslint", "--type-check", "--project", tsconfig)
+    assert system("#{npm_bin}/tslint", "--project", tsconfig)
   end
 
   def test_build_name_non_camel_case

@@ -13,6 +13,7 @@ matrix:
 install:
   - nvm install 8
   - npm install
+  - gem update --system
   - bundle install --jobs=3 --retry=3 --path=${BUNDLE_PATH:-vendor/bundle}
 
 cache:

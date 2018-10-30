@@ -1,5 +1,9 @@
 # The Revision History of TsRoutes
 
+## v1.0.2 2018/10/30
+
+* [#7](https://github.com/bitjourney/ts_routes-rails/pull/7): Loosen railties deps for rails v4 (by @mstssk)
+
 ## v1.0.1 2017/07/19
 
 * Change the license from MIT to Apache 2.0

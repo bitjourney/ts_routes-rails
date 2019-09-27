@@ -2,12 +2,8 @@ dist: trusty
 sudo: false
 language: ruby
 rvm:
-  - 2.4
   - 2.5
-
-matrix:
-  allow_failures:
-    - rvm: 2.5
+  - 2.6
 
 install:
   - nvm install 8

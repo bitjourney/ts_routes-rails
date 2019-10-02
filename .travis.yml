@@ -6,7 +6,7 @@ rvm:
   - 2.6
 
 install:
-  - nvm install 8
+  - nvm install 10
   - npm install -g npm && npm --version
   - npm ci
   - gem update --system && gem --version
